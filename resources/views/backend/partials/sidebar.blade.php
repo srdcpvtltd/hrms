@@ -668,6 +668,14 @@
                             </ul>
                         </li>
                     @endif
+                    <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
+                        <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardCheckinModal') }}`)"
+                            class="parent-item-content {{ menu_active_by_route(['attendance.index']) }}">
+                            <i class="las la-calendar-check"></i>
+                            <span class="on-half-expanded">{{ _trans('common.Attendance') }}</span>
+                        </a>
+                    </li>
+
 
                     @include('backend.partials.configurations-sidebar')
 
