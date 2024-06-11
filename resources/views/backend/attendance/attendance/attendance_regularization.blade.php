@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content data">
             <div class="modal-header modal-header-image mb-3">
-                <h5 class="modal-title text-white">{{ @$data['title'] }} </h5>
+                <h5 class="modal-title text-white">Regularization </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-times text-white" aria-hidden="true"></i>
                 </button>
@@ -19,8 +19,7 @@
                             <div class="place-switch">
                                 <div class="switch-field">
 
-                                    <input type="radio" id="place_office" name="place_mode" value="1"
-                                        checked="">
+                                    <input type="radio" id="place_office" name="place_mode" value="1" checked="">
                                     <label for="place_office">
                                         <i class="fas fa-building"></i>
                                         <p class="on-half-expanded">{{ _trans('common.Office') }}</p>
@@ -38,22 +37,24 @@
                         <div class="form-group">
                             <div class="timer-field pt-2 pb-2">
                                 <h1 class="text-center">
-                                    <div class="clock company_name_clock fs-16 clock" id="clock"
-                                        onload="currentTime()">{{ _trans('attendance.00:00:00') }}</div>
+                                    <div class="clock company_name_clock fs-16 clock">{{ _trans('attendance.00:00:00') }}</div>
                             </div>
                         </div>
+                        <div class="form-group">
+                        <input type="date" name="date" id="date" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+                        <small onchange="validateDate()" id="date-error" class="text-red-500 hidden">Please select a date within the last 48 hours.</small>
+
+                        </div>
+
                         @if (@$data['reason'][0] == 'L')
-                            <div class="form-group w-50 mx-auto mb-3">
-                                <label class="form-label float-left">{{ _trans('common.Late Reason') }} <span
-                                        class="text-danger">*</span></label>
-                                <textarea type="text" name="reason" id="reason" rows="3" class="form-control mt-0 ot-input" required
-                                    onkeyup="textAreaValidate(this.value, 'error_show_reason')" placeholder="{{ _trans('common.Enter Late Reason') }}">{{ old('reason') }}</textarea>
-                                <small class="error_show_reason text-left text-danger">
+                        <div class="form-group w-50 mx-auto mb-3">
+                            <label class="form-label float-left">{{ _trans('common.Late Reason') }} <span class="text-danger">*</span></label>
+                            <textarea type="text" name="reason" id="reason" rows="3" class="form-control mt-0 ot-input" required onkeyup="textAreaValidate(this.value, 'error_show_reason')" placeholder="{{ _trans('common.Enter Late Reason') }}">{{ old('reason') }}</textarea>
+                            <small class="error_show_reason text-left text-danger">
 
-                                </small>
-                            </div>
+                            </small>
+                        </div>
                         @endif
-
                         <div class="form-group button-hold-container">
                             <button class="button-hold" id="button-hold">
                                 <div>
@@ -73,4 +74,38 @@
         </div>
     </div>
 </div>
-<script src="{{ global_asset('backend/js/fs_d_ecma/components/__attendance.js') }}"></script>
+<script src="{{ global_asset('backend/js/fs_d_ecma/components/__regularization.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.getElementById('date');
+        const errorMessage = document.getElementById('date-error');
+
+        function setDateConstraints() {
+            const now = new Date();
+            const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+
+            const formatDate = (date) => date.toISOString().split('T')[0];
+
+            dateInput.max = formatDate(now);
+            dateInput.min = formatDate(twoDaysAgo);
+        }
+
+        function validateDate() {
+            console.log('coming to validate');
+            const selectedDate = new Date(dateInput.value);
+            const now = new Date();
+            const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+
+            if (selectedDate < twoDaysAgo || selectedDate > now) {
+                errorMessage.classList.remove('hidden');
+                dateInput.setCustomValidity('Invalid date');
+            } else {
+                errorMessage.classList.add('hidden');
+                dateInput.setCustomValidity('');
+            }
+        }
+
+        setDateConstraints();
+        // dateInput.addEventListener('input', validateDate);
+    });
+</script>

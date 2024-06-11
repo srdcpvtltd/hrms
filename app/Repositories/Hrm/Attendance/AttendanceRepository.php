@@ -340,7 +340,7 @@ class AttendanceRepository
                     if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
                         $validator = Validator::make($request->all(), [
                             'reason' => 'required',
-                        ]);
+                        ]); 
 
                         if ($validator->fails()) {
                             $data = [

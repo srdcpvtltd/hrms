@@ -3,19 +3,14 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use App\Models\Settings\HrmLanguage;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use App\Models\coreApp\Setting\Setting;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Redirect;
-use App\Repositories\Team\TeamRepository;
 use App\Helpers\CoreApp\Traits\DateHandler;
-use App\Repositories\Interfaces\TeamInterface;
 use App\Helpers\CoreApp\Traits\GeoLocationTrait;
 use App\Helpers\CoreApp\Traits\TimeDurationTrait;
 use App\Helpers\CoreApp\Traits\ApiReturnFormatTrait;

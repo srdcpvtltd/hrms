@@ -669,10 +669,10 @@
                         </li>
                     @endif
                     <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
-                        <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardCheckinModal') }}`)"
+                        <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardRegularizationModal') }}`)"
                             class="parent-item-content {{ menu_active_by_route(['attendance.index']) }}">
                             <i class="las la-calendar-check"></i>
-                            <span class="on-half-expanded">{{ _trans('common.Attendance') }}</span>
+                            <span class="on-half-expanded">{{ _trans('common.Regularization') }}</span>
                         </a>
                     </li>
 

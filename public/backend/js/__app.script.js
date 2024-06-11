@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 
 $(document).ready(function() {
-    function currentTime() {
+    function jyoti() {
         let date = new Date();
         let hh = date.getHours();
         let mm = date.getMinutes();
@@ -32,7 +32,7 @@ $(document).ready(function() {
         let time = hh + ":" + mm + ":" + ss + " " + session;
         $('.clock').html(time);
         // document.getElementById("clock").innerText = time;
-        let t = setTimeout(function(){ currentTime() }, 1000);
+        let t = setTimeout(function(){ jyoti() }, 1000);
     }
-   currentTime();
+   jyoti();
 });

@@ -1,9 +1,7 @@
-
 var url = $('#url').val();
 var _token = $('meta[name="csrf-token"]').attr('content');
 
-
-function btnHold(){
+function btnHold() {
     let duration = 1600,
         success = button => {
             //Success function
@@ -16,7 +14,7 @@ function btnHold(){
         ['mousedown', 'touchstart', 'keypress'].forEach(e => {
             button.addEventListener(e, ev => {
                 if (e != 'keypress' || (e == 'keypress' && ev.which == 32 && !button
-                        .classList.contains('process'))) {
+                    .classList.contains('process'))) {
                     button.classList.add('process');
                     button.timeout = setTimeout(success, duration, button);
                 }
@@ -33,17 +31,17 @@ function btnHold(){
     });
 
 }
+
 btnHold();
 var checkUrl;
 var checkIn = (url) => {
     checkUrl = url;
     if (navigator?.geolocation) {
-            navigator.geolocation.getCurrentPosition(attendanceStore, positionError, {timeout:10000});
-      } else { 
-         console.log("Geolocation is not supported by this browser.");
-      }   
+        navigator.geolocation.getCurrentPosition(attendanceStore, positionError, { timeout: 10000 });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
 }
-
 function positionError(error) {
     Toast.fire({
         icon: 'error',
@@ -51,7 +49,6 @@ function positionError(error) {
     })
     $('.progress').show();
     $('#button-hold').removeClass('success');
-    
 
     attendanceStore();
 }
@@ -59,7 +56,7 @@ function positionError(error) {
 function attendanceStore(position = null){
     // console.log(position);
     var reason = $('#reason').val();
-
+    var date = $('#reason').val();
     $('#reason').val()
     if ($('#reason').length > 0 && (reason == '' || reason == null) ) {
         $('#reason').focus();
@@ -77,6 +74,7 @@ function attendanceStore(position = null){
             longitude         : position?.coords?.longitude ?? '90.4067015' ,
             remote_mode_in    : parseInt($('input[name="place_mode"]:checked').val() ?? 0) ,
             reason            : reason ?? '',
+            date              : date ?? ''
         },
         success: function (data) {
             if (data?.result) {
@@ -123,6 +121,3 @@ textAreaValidate = (value,className) => {
         return true;
     }
 }
-
-
-
