@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Attendance;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\Hrm\Attendance\AttendanceRegularizationRepository;
 use App\Repositories\Hrm\Attendance\AttendanceRepository;
 use App\Repositories\Hrm\Department\DepartmentRepository;
 use App\Repositories\UserRepository;
@@ -15,13 +16,17 @@ class RegularizationControler extends Controller
     protected $departmentRepository;
     protected $userRepository;
     protected $breakBackService;
+    protected $attendance_reg_repo;
 
-    public function __construct(AttendanceRepository $attendance_repo, DepartmentRepository $departmentRepository, UserRepository $userRepository, EmployeeBreakService $breakBackService)
+    public function __construct(AttendanceRegularizationRepository $attendance_reg_repo,AttendanceRepository $attendance_repo, DepartmentRepository $departmentRepository, UserRepository $userRepository, EmployeeBreakService $breakBackService)
     {
         $this->attendance_repo = $attendance_repo;
         $this->departmentRepository = $departmentRepository;
         $this->userRepository = $userRepository;
         $this->breakBackService = $breakBackService;
+        $this->breakBackService = $breakBackService;
+        $this->attendance_reg_repo =$attendance_reg_repo;
+
     }
     public function dashboardAjaxRegularizationModal(Request $request)
     {
@@ -33,7 +38,7 @@ class RegularizationControler extends Controller
             $data['type']     = 'checkin';
             $data['reason']   = $this->attendance_repo->checkInStatus(auth()->user()->id, date('H:i'));
             return view('backend.attendance.attendance.attendance_regularization', compact('data'));
-        } catch (\Throwable $th) {
+        } catch (\Throwable $th) {  
             return response()->json('fail');
         }
     }
@@ -41,7 +46,8 @@ class RegularizationControler extends Controller
     public function dashboardAjaxRegularization(Request $request){
         try {
             $request['user_id'] = auth()->user()->id;
-            $request['check_in'] = date('H:i');
+            $request['check_in'] = date('H:i',strtotime($request->checkIn));
+            $request['check_out'] = date('H:i',strtotime($request->checkOut));
             $request['date'] = date('Y-m-d',strtotime($request->date));
             $request['check_in_latitude'] = $request->latitude;
             $request['check_in_longitude'] = $request->longitude;
@@ -50,7 +56,9 @@ class RegularizationControler extends Controller
                 return $this->responseWithError(_trans('messages.Remote mode is not selected'));
             }
             $request['company_id'] = $this->userRepository->getById($request->user_id)->company->id;
-            $store = $this->attendance_repo->store($request);
+            
+            $store = $this->attendance_reg_repo->store($request);
+            
             if ($store->original['result']) {
                 if ($request->check_out) {
                     $request['remote_mode_out'] = 0;

@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Hrm\Attendance;
 
-use Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Enums\AttendanceStatus;
@@ -25,6 +24,7 @@ use App\Helpers\CoreApp\Traits\FileHandler;
 use App\Models\coreApp\Relationship\RelationshipTrait;
 use App\Repositories\Hrm\Leave\LeaveRequestRepository;
 use App\Repositories\Settings\CompanyConfigRepository;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceRepository
 {
@@ -36,7 +36,7 @@ class AttendanceRepository
     protected $config_repo;
 
     public function __construct(
-        Attendance $attendance,
+        Attendance $attendance, 
         User $user,
         LeaveRequestRepository $leave_request_repo,
         CompanyConfigRepository $companyConfigRepo
@@ -349,13 +349,15 @@ class AttendanceRepository
                             return $this->responseWithError(__('Reason is required'), $data, 400);
                         }
                     }
+                    
                     $current_date_time = date('Y-m-d H:i:s');
                     $checkinTime = $this->getDateTime($request->check_in);
                     $check_in = new $this->attendance;
+                    // dd($check_in);
                     $check_in->company_id = $user->company->id;
                     $check_in->user_id = $user->id;
                     $check_in->remote_mode_in = $request->remote_mode_in;
-                    $check_in->date = $request->date;
+                    $check_in->date = $request->date;   
 
                     if ($request->hasFile('face_image')) {
                         $filePath = $this->uploadImage($request->face_image, 'uploads/attendance/');

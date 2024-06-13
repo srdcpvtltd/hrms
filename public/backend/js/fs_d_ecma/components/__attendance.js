@@ -52,7 +52,6 @@ function positionError(error) {
     $('.progress').show();
     $('#button-hold').removeClass('success');
     
-
     attendanceStore();
 }
 

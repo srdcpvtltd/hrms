@@ -57,6 +57,8 @@ function attendanceStore(position = null){
     // console.log(position);
     var reason = $('#reason').val();
     var date = $('#reason').val();
+    var checkIn = $('#checkin_time').val();
+    var checkOut = $('#checkout_time').val();
     $('#reason').val()
     if ($('#reason').length > 0 && (reason == '' || reason == null) ) {
         $('#reason').focus();
@@ -74,7 +76,9 @@ function attendanceStore(position = null){
             longitude         : position?.coords?.longitude ?? '90.4067015' ,
             remote_mode_in    : parseInt($('input[name="place_mode"]:checked').val() ?? 0) ,
             reason            : reason ?? '',
-            date              : date ?? ''
+            date              : date ?? '',
+            checkIn           : checkIn ?? '',
+            checkOut          : checkOut ?? ''
         },
         success: function (data) {
             if (data?.result) {
