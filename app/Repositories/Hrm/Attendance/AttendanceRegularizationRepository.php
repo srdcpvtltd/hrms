@@ -41,6 +41,7 @@ class AttendanceRegularizationRepository{
     protected $leave_request_repo;
     protected $config_repo;
     protected $attendance_repo;
+    protected $regularization;
     /**
      * @return string
      *  Return the model
@@ -52,9 +53,10 @@ class AttendanceRegularizationRepository{
         User $user,
         LeaveRequestRepository $leave_request_repo,
         CompanyConfigRepository $companyConfigRepo,
-        AttendanceRepository $attendance_repo
+        AttendanceRepository $attendance_repo,
     ) {
         $this->attendance = $attendance;
+        $this->regularization = $regularization;
         $this->user = $user;
         $this->leave_request_repo = $leave_request_repo;
         $this->config_repo = $companyConfigRepo;
@@ -88,47 +90,96 @@ class AttendanceRegularizationRepository{
     }
 
     public function attendanceRegularization($user, $request){
+        Log::info($request);
         Log::info('jyoti-regularization repository->attendanceRegularization');
                     // Log::info($user);
         if($user){
+            Log::info($user);
             $attendance = $this->attendance->where(['user_id' => $user->id, 'date' => $request->date])->first();
-            if ($attendance && !settings('multi_checkin')) {
+            $check_regularization = $this->regularization->where(['user_id' => $user->id, 'date' => $request->date])->first();;
+            if ($check_regularization && $attendance && !settings('multi_checkin')) {
+                Log::info("multi_checkin");
                 return $this->responseWithError('Attendance already exists', [], 400);
             }
             if (settings('location_check') && !$this->attendance_repo->locationCheck($request)) {
+                Log::info("location_check");
                 return $this->responseWithError('Your location is not valid', [], 400);
             }
-            $isIpRestricted = $this->attendance_repo->isIpRestricted();
-            if($isIpRestricted){
+            $isIpRestricted = $this->attendance_repo->isIpRestricted();  
+
+            if ($isIpRestricted) {
                 $request['checkin_ip'] = getUserIpAddr();
                 $attendance_status = $this->attendance_repo->checkInStatus($user->id, $request->check_in);
-                // Log::info($attendance_status);
+                Log::info($attendance_status);
+                if (count($attendance_status) > 0) {
 
-                // if (count($attendance_status) > 0) {
-                //     if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
-                //         $validator = Validator::make($request->all(), [
-                //             'reason' => 'required',
-                //         ]); 
+                    if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
+                        $validator = Validator::make($request->all(), [
+                            'reason' => 'required',
+                        ]); 
 
-                //         if ($validator->fails()) {
-                //             $data = [
-                //                 'reason_status' => 'L'
-                //             ];
-                //             return $this->responseWithError(__('Reason is required'), $data, 400);
-                //         }
-                //     }
-
-                //     }
+                        if ($validator->fails()) {
+                            $data = [
+                                'reason_status' => 'L'
+                            ];
+                            return $this->responseWithError(__('Reason is required'), $data, 400);
+                        }
+                    }
+                    
                     $current_date_time = date('Y-m-d H:i:s');
-                    $checkinTime = $this->getDateTime($request->check_in);
-                    $regularization = new $this->attendance_repo;
-                    Log::info("coming into isIpRstricted");
-                    Log::info($regularization);
-                    // $regularization->company_id = $user->company->id;
-                    // $regularization->user_id = $user->id;
-                    // $regularization->remote_mode_in = $request->remote_mode_in;
-                    // $regularization->date = $request->date;
-            }   
+                    $checkinTime = $this->getDateTime($request->checkIn);
+                    $checkoutTime = $this->getDateTime($request->checkOut);
+
+                    $regularization = new $this->regularization;
+                    // dd($check_in);
+                    $regularization->user_id = $user->id;
+                    $regularization->company_id = $user->company->id;
+                    $regularization->remote_mode_in = $request->remote_mode_in;
+                    $regularization->date = $request->date;   
+
+                    if ($request->hasFile('face_image')) {
+                        $filePath = $this->uploadImage($request->face_image, 'uploads/attendance/');
+                        $regularization->face_image = $filePath ? $filePath->id : null;
+                    }
+
+                    if ($request->attendance_from == 'web') {
+                        $regularization->check_in = $checkinTime;
+                        $regularization->check_out = $checkoutTime;
+
+                    } else {
+                        $regularization->check_in = $current_date_time;
+                        $regularization->check_out = $checkoutTime;
+                    }
+
+                    $regularization->in_status = $attendance_status[0];
+                    $regularization->checkin_ip = $request->checkin_ip;
+                    $regularization->late_time = $attendance_status[1];
+                    // $check_in->check_in_location = $request->check_in_location;
+                    $regularization->check_in_location = getGeocodeData($request->latitude, $request->longitude);
+                    $regularization->check_in_latitude = $request->latitude;
+                    $regularization->check_in_longitude = $request->longitude;
+                    $regularization->check_in_city = $request->city;
+                    $regularization->check_in_country_code = $request->country_code;
+                    $regularization->check_in_country = $request->country;
+                    $regularization->save();
+
+                    if ($request->reason) {
+                        LateInOutReason::create([
+                            'attendance_id' => $regularization->id,
+                            'user_id' => $regularization->user_id,
+                            'company_id' => $regularization->user->company->id,
+                            'type' => 'in',
+                            'reason' => $request->reason
+                        ]);
+                    }
+
+                    return $this->responseWithSuccess('Check in Regularization Successfull', $regularization, 200);
+                } else {
+                    return $this->responseWithError('No Schedule found', [], 400);
+                }
+            } else {
+                return $this->responseWithError('You your ip address is not valid', [], 400);
+            }
         }
     }
 }

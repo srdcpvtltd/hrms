@@ -70,7 +70,9 @@ class Regularization extends Model
     ];
 
     protected $attributes=[
-        'approve_status' => 0
+        // 0 is not approved
+        //1 is approved
+        'approve_status' => 0 
     ];
 
     protected $casts = [

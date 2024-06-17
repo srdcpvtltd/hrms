@@ -56,7 +56,7 @@ function positionError(error) {
 function attendanceStore(position = null){
     // console.log(position);
     var reason = $('#reason').val();
-    var date = $('#reason').val();
+    var date = $('#date').val();
     var checkIn = $('#checkin_time').val();
     var checkOut = $('#checkout_time').val();
     $('#reason').val()
