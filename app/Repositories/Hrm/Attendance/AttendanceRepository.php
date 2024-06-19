@@ -894,6 +894,27 @@ class AttendanceRepository
 
         ];
     }
+    function regularization_fields()
+    {
+        return [
+            _trans('common.ID'),
+            _trans('common.Name'),
+            _trans('common.Date'),
+            _trans('common.Department'),
+            _trans('common.Approved'),
+            _trans('common.Break'),
+            _trans('common.Break Duration'),
+            _trans('common.Check In'),
+            _trans('common.Face'),
+            _trans('common.Checkin Location'),
+            _trans('common.Check Out'),
+            _trans('common.Checkout Location'),
+            _trans('common.Hours'),
+            // _trans('common.Overtime'),
+            _trans('common.Action')
+
+        ];
+    }
     function report_fields()
     {
         return [

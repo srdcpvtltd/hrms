@@ -593,5 +593,8 @@
     "QR Code": "QR Code",
     "Attendance": "Attendance",
     "Regularization": "Regularization",
-    "Select Date": "Select Date"
+    "Select Date": "Select Date",
+    "In Time": "In Time",
+    "Late reason": "Late reason",
+    "Out time": "Out time"
 }

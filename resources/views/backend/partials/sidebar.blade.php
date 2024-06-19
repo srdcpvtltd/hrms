@@ -259,6 +259,20 @@
                                     @include('qrbasedattendance::partials.sidebar.menu')
                                 @endif
                             </ul>
+
+                            <ul class="child-menu-list {{ set_active(['hrm/attendance*', 'hrm/qr-code*']) }}">
+                                @if (hasPermission('attendance_read'))
+                                    <li class="nav-item {{ menu_active_by_route('regularization.index') }}">
+                                        <a href="{{ route('regularization.index') }}"
+                                            class=" {{ set_active(route('regularization.index')) }}">
+                                            <span>{{ _trans('attendance.Regularization') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (isModuleActive('QrBasedAttendance') && hasPermission('generate_qr_code') && settings('attendance_method') == 'QR')
+                                    @include('qrbasedattendance::partials.sidebar.menu')
+                                @endif
+                            </ul>
                         </li>
                     @endif
                     @if (hasPermission('conference_read') && isModuleActive('VideoConference') && hasFeature('conference'))
@@ -668,6 +682,7 @@
                             </ul>
                         </li>
                     @endif
+                    @if (hasPermission('user_menu') != true && !hasFeature('employees') != true)
                     <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
                         <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardRegularizationModal') }}`)"
                             class="parent-item-content {{ menu_active_by_route(['attendance.index']) }}">
@@ -675,7 +690,7 @@
                             <span class="on-half-expanded">{{ _trans('common.Regularization') }}</span>
                         </a>
                     </li>
-
+                    @endif
 
                     @include('backend.partials.configurations-sidebar')
 

@@ -53,7 +53,24 @@ class AttendanceController extends Controller
         $data['checkbox'] = true;
         $data['title'] = _trans('attendance.Attendance History');
         $data['departments'] = $this->departmentRepository->getAll();
+        // dd($data);
         return view('backend.attendance.attendance.index', compact('data'));
+    }
+
+    public function regularization_index(Request $request)
+    {
+        if ($request->ajax()) {
+            return $this->attendanceReportRepository->table($request);
+        }
+        $data['class']  = 'regularization_table';
+        $data['fields'] = $this->attendance_repo->regularization_fields();
+        $data['table']     = route('regularization.index');
+        $data['url_id']    = 'regularization_table_url';
+        $data['checkbox'] = true;
+        $data['title'] = _trans('attendance.Attendance History');
+        $data['departments'] = $this->departmentRepository->getAll();
+        // dd($data);
+        return view('backend.attendance.attendance.regularization_index', compact('data'));
     }
 
     public function checkIn()

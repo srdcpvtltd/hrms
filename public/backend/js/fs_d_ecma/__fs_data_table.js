@@ -487,13 +487,53 @@ function attendanceDatatable(...values) {
 $(".attendance_table").length > 0 ? attendanceDatatable() : "";
 //attendance_table end
 
+function regularizationDatatable(...values) {
+  let data = [];
+  let url = $("#regularization_table_url").val();
+  data["url"] = url;
+  let { from, to } = __date_range ?? {};
+  var shortBy = $("#short_by").val();
+  data["value"] = {
+    from: from ? from : null,
+    to: to ? to : null,
+    short_by: shortBy ? shortBy : null,
+    limit: $("#entries").val(),
+    search: $('input[name="search"]').val(),
+    department: $("#department_id").val(),
+    user_id: $("#__user_id").val() ?? null,
+    type: $("#type").val(),
+    _token: _token,
+  };
+  data["column"] = [
+    "id",
+    "name",
+    "date",
+    "department",
+    "approved",
+    "totalBreak",
+    "breakDuration",
+    "checkin",
+    "face_image",
+    "checkinLocation",
+    "checkout",
+    "checkoutLocation",
+    "hours",
+    "action",
+  ];
+  
+  data["table_id"] = "regularization_table";
+  // console.log(data);
+  table(data);
+}
+$(".regularization_table").length > 0 ? regularizationDatatable() : "";
+
 //salary_set_up_table start
 function salarySetUpDatatable(...values) {
   let data = [];
   data["url"] = $("#salary_set_up_url").val();
   let { from, to } = __date_range ?? {};
   var shortBy = $("#short_by").val();
-  data["value"] = {
+  data["value"] = {  
     from: from ? from : null,
     to: to ? to : null,
     short_by: shortBy ? shortBy : null,
