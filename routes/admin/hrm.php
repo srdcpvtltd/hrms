@@ -111,6 +111,7 @@ Route::group(['prefix' => 'hrm', 'middleware' => ['xss', 'admin', 'MaintenanceMo
             Route::get('/', [AttendanceController::class, 'index'])->name('attendance.index')->middleware('PermissionCheck:attendance_read');
             Route::get('add', [AttendanceController::class, 'checkIn'])->name('attendance.check-in')->middleware('PermissionCheck:attendance_create');
             Route::get('edit/check-in/{attendance}', [AttendanceController::class, 'checkInEdit'])->name('attendance.checkInEdit')->middleware('PermissionCheck:attendance_update');
+            Route::get('edit/regularization/{attendance}', [AttendanceController::class, 'approveRegularization'])->name('approve.attendance.regularization')->middleware('PermissionCheck:attendance_update');
             Route::get('regularization-index', [AttendanceController::class, 'regularization_index'])->name('regularization.index')->middleware('PermissionCheck:attendance_read');
 
             Route::get('check-out/{attendance_id}', [AttendanceController::class, 'checkOut'])->name('attendance.checkout')->middleware('PermissionCheck:attendance_update');

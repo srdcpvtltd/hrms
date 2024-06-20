@@ -13,6 +13,7 @@ use App\Services\Hrm\EmployeeBreakService;
 use App\Helpers\CoreApp\Traits\ApiReturnFormatTrait;
 use App\Models\coreApp\Relationship\RelationshipTrait;
 use App\Http\Requests\Hrm\Attendance\AttendanceRequest;
+use App\Models\Hrm\Attendance\Regularization;
 use App\Repositories\Report\AttendanceReportRepository;
 use App\Repositories\Hrm\Attendance\AttendanceRepository;
 use App\Repositories\Hrm\Department\DepartmentRepository;
@@ -59,8 +60,9 @@ class AttendanceController extends Controller
 
     public function regularization_index(Request $request)
     {
+        // dd($request->all());
         if ($request->ajax()) {
-            return $this->attendanceReportRepository->table($request);
+            return $this->attendanceReportRepository->regularization_table($request);
         }
         $data['class']  = 'regularization_table';
         $data['fields'] = $this->attendance_repo->regularization_fields();
@@ -89,7 +91,12 @@ class AttendanceController extends Controller
         return view('backend.attendance.attendance.check_out', compact('data'));
     }
 
-
+    public function approveRegularization($id){
+        $regularization_data = Regularization::find($id);
+        $regularization_data->approve_status=1;
+        $regularization_data->save();
+        return redirect()->route('regularization.index');
+    }
 
     public function show($attendance_id)
     {

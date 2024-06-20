@@ -45,7 +45,7 @@ function emptyTable(){
 
 
 function table(table_info, page = 1) {
-// console.log(table_info);
+console.log(table_info);
     table_data = table_info;
     console.log(table_info['url'] + '?page=' + page ?? 1);
     $.ajax({
