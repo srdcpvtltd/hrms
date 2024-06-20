@@ -12,7 +12,7 @@ class LateInOutReason extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['company_id', 'attendance_id', 'type', 'reason'];
+    protected $fillable = ['company_id', 'attendance_id','regularization_id', 'type', 'reason'];
 
     protected static $logAttributes = ['company_id', 'attendance_id', 'type', 'reason'];
 
@@ -21,7 +21,10 @@ class LateInOutReason extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-
+    public function regularization(): BelongsTo
+    {
+        return $this->belongsTo(Regularization::class);
+    }
 
     public function getActivitylogOptions(): LogOptions
     {

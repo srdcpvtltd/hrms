@@ -35,7 +35,9 @@ function btnHold() {
 btnHold();
 var checkUrl;
 var checkIn = (url) => {
+    console.log(url);
     checkUrl = url;
+
     if (navigator?.geolocation) {
         navigator.geolocation.getCurrentPosition(attendanceStore, positionError, { timeout: 10000 });
     } else {
