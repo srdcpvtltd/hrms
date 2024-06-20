@@ -1862,10 +1862,12 @@ class AttendanceReportRepository
             return [
                 'data' => $data->map(function ($data) {
                     $action_button = '';
-                    $approve_action = '';
+                    $action_button = '';
                     if (hasPermission('attendance_update')) {
-                        $approve_action .= actionButton(_trans('common.Approve'), route('approve.attendance.regularization', $data->id), 'profile');
-                        // $action_button .= actionButton(_trans('common.Approve'), route('attendance.checkInEdit', $data->id), 'profile');
+                        $action_button .= actionButton(_trans('common.Approve'), route('approve.attendance.regularization', $data->id), 'profile');
+                        // $action_button .= actionButton(_trans('common.Edit'), route('attendance.checkInEdit', $data->id), 'profile');
+                        $action_button .= actionButton(_trans('common.Reject'), route('reject.attendance.regularization', $data->id), 'profile');
+
                     }
                     // $button = ' <div class="dropdown dropdown-action">
                     //                    <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
@@ -1882,7 +1884,7 @@ class AttendanceReportRepository
                                            <i class="fa-solid fa-ellipsis"></i>
                                        </button>
                                        <ul class="dropdown-menu dropdown-menu-end">
-                                       ' . $approve_action . '
+                                       ' . $action_button . '
                                        </ul>
                                    </div>';
 

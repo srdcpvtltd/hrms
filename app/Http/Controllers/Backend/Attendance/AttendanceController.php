@@ -98,6 +98,11 @@ class AttendanceController extends Controller
         return redirect()->route('regularization.index');
     }
 
+    public function rejectRegularization($id){
+        $regularization_data = Regularization::find($id);
+        $regularization_data->delete();
+        return redirect()->route('regularization.index');
+    }
     public function show($attendance_id)
     {
         $data = $this->attendance_repo->show($attendance_id);

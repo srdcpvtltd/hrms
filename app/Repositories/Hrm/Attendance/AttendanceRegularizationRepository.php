@@ -81,7 +81,6 @@ class AttendanceRegularizationRepository{
 
 
             $user = $this->user->query()->find(Auth::id());
-            Log::info('jyoti-regularization repository->store');
             return $this->attendanceRegularization($user, $request);
         } catch (\Throwable $th) {
             // Log::error($th);
