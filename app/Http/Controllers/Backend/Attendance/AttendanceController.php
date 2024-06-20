@@ -84,21 +84,54 @@ class AttendanceController extends Controller
 
     public function checkInEdit(Attendance $attendance)
     {
-        
+
         $data['title'] = _trans('attendance.Edit Attendance');
         $data['show'] = $attendance->load('lateInReason');
         $data['users'] = $this->attendance_repo->checkInUsers();
         return view('backend.attendance.attendance.check_out', compact('data'));
     }
 
-    public function approveRegularization($id){
+    public function approveRegularization($id)
+    {
         $regularization_data = Regularization::find($id);
-        $regularization_data->approve_status=1;
-        $regularization_data->save();
+        $regularization_data->approve_status = 1;
+        $result = $regularization_data->save();
+
+        if ($result) {
+           Attendance::create([
+                'user_id' => $regularization_data->user_id,
+                'company_id' => $regularization_data->company_id,
+                'date' => $regularization_data->date,
+                'check_in' => $regularization_data->check_in,
+                'remote_mode_in' => $regularization_data->remote_mode_in,
+                'remote_mode_out' => $regularization_data->remote_mode_out,
+                'check_out' => $regularization_data->check_out,
+                'stay_time' => $regularization_data->stay_time,
+                'late_reason' => $regularization_data->late_reason,
+                'late_time' => $regularization_data->late_time,
+                'in_status' => $regularization_data->in_status,
+                'out_status' => $regularization_data->out_status,
+                'checkin_ip' => $regularization_data->checkin_ip,
+                'checkout_ip' => $regularization_data->checkout_ip,
+                'check_in_location' => $regularization_data->check_in_location,
+                'check_out_location' => $regularization_data->check_out_location,
+                'check_in_latitude' => $regularization_data->check_in_latitude,
+                'check_in_longitude' => $regularization_data->check_in_longitude,
+                'check_out_latitude' => $regularization_data->check_out_latitude,
+                'check_out_longitude' => $regularization_data->check_out_longitude,
+                // // 'city' => $regularization_data->city,
+                // 'country_code' => $regularization_data->country_code,
+                // 'country' => $regularization_data->country,
+                // 'status_id' => $regularization_data->status_id
+            ]);
+        }
+
+
         return redirect()->route('regularization.index');
     }
 
-    public function rejectRegularization($id){
+    public function rejectRegularization($id)
+    {
         $regularization_data = Regularization::find($id);
         $regularization_data->delete();
         return redirect()->route('regularization.index');
@@ -111,10 +144,6 @@ class AttendanceController extends Controller
 
     public function store(Request $request)
     {
-
-
-
-
         try {
             $request['remote_mode_in'] = 0;
             if ($request->in_from_web) {
@@ -269,7 +298,7 @@ class AttendanceController extends Controller
             $request['check_in_latitude'] = $request->latitude;
             $request['check_in_longitude'] = $request->longitude;
             $request['remote_mode_out'] = 0;
-            $attendance = Attendance::where('user_id', $request->user_id)->where('date', '>=', date('Y-m-d',strtotime("-1 days")))->where('check_in', '!=', null)->where('check_out', '=', null)->first();
+            $attendance = Attendance::where('user_id', $request->user_id)->where('date', '>=', date('Y-m-d', strtotime("-1 days")))->where('check_in', '!=', null)->where('check_out', '=', null)->first();
             if (!$attendance) {
                 return $this->responseWithError('Attendance Data Not Found', false);
             }

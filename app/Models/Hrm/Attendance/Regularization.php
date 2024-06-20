@@ -87,7 +87,7 @@ class Regularization extends Model
 
     public function lateInOutReason(): HasMany
     {
-        return $this->hasMany(LateInOutReason::class, 'attendance_id', 'id');
+        return $this->hasMany(LateInOutReason::class, 'regularization_id', 'id');
     }
 
     public function lateInReason(): HasOne

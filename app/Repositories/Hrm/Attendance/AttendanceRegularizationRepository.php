@@ -164,8 +164,8 @@ class AttendanceRegularizationRepository{
 
                     if ($request->reason) {
                         LateInOutReason::create([
-                            'attendance_id' => $regularization->id,
-                            'user_id' => $regularization->user_id,
+                            'regularization_id' => $regularization->id,
+                            'user_id' => $regularization->user_id, 
                             'company_id' => $regularization->user->company->id,
                             'type' => 'in',
                             'reason' => $request->reason
