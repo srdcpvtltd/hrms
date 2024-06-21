@@ -9,12 +9,12 @@ function checkAttendance() {
         date: document.getElementById('date').value
     };
     let modal_url = $('#form_modal_url').val();
-    console.log(modal_url);
 
     fetch(modal_url, {
         method: 'post',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': _token
         },
         body: JSON.stringify(reg_date)
     }).then(response => {
@@ -25,9 +25,21 @@ function checkAttendance() {
         return response.json();
     }).then(responseData => {
         console.log(responseData);
-    }).catch(error => {
-        console.error(error);
-    })
+        if(responseData?.check_in != null){
+            let checkin_time = responseData.check_in;
+
+            // Extract the time part in HH:MM format
+            let timeOnly = checkin_time.substring(11, 16);
+            
+            // Set the value to the time input field
+            document.getElementById('checkin_time').value = timeOnly;
+        }else{
+            Toast.fire({
+                icon: 'error',
+                title: responseData?.message ?? 'Something went wrong.',
+            })
+        }
+    });
 }
 
 

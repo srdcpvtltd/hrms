@@ -41,10 +41,9 @@
                             </div>
                         </div> -->
                             <div class="modal-date">
-                                <input type="date" name="date" id="date" onchange="checkAttendance()" class="form-control" required>
+                                <input type="date" name="date" onchange="checkAttendance()" id="date" class="form-control" required>
                                 <!-- <small onchange="validateDate()" id="date-error" class="hint-msg">Please select a date within the last 48 hours.</small> -->
                             </div>
-                            <div class="modal-checkin">
                                 <label for="checkin_time">Checkin</label>
                                 <input type="time" name="checkin_time" id="checkin_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
                             </div>
@@ -52,6 +51,7 @@
                                 <label for="checkin_time">Checkout</label>
                                 <input type="time" name="checkout_time" id="checkout_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
                             </div>
+                            <div class="modal-chec
 
                         @if (@$data['reason'][0] == 'L')
                         <div class="form-group w-50 mx-auto mb-3">
@@ -75,7 +75,7 @@
                             </button>
                         </div>
                         <input type="hidden" id="form_url" value="{{ @$data['url'] }}">
-                        <input type="hidden" id="form_modal_url" value="{{ @$data['modal_url'] }}">
+                        <input type="hidden" id="form_modal_url" value="{{ @$data['check_attendance_url'] }}">
                     </div>  
                 </div>
             </div>
