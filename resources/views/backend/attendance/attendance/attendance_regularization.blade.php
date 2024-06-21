@@ -40,18 +40,18 @@
                                     <div class="clock company_name_clock fs-16 clock">{{ _trans('attendance.00:00:00') }}</div>
                             </div>
                         </div> -->
-                        <div class="form-group">
-                            <input type="date" name="date" id="date" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
-                            <small onchange="validateDate()" id="date-error" class="text-red-500 hidden">Please select a date within the last 48 hours.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="checkin_time">Checkin</label>
-                            <input type="time" name="checkin_time" id="checkin_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="checkin_time">Checkout</label>
-                            <input type="time" name="checkout_time" id="checkout_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
-                        </div>
+                            <div class="modal-date">
+                                <input type="date" name="date" id="date" onchange="checkAttendance()" class="form-control" required>
+                                <!-- <small onchange="validateDate()" id="date-error" class="hint-msg">Please select a date within the last 48 hours.</small> -->
+                            </div>
+                            <div class="modal-checkin">
+                                <label for="checkin_time">Checkin</label>
+                                <input type="time" name="checkin_time" id="checkin_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+                            </div>
+                            <div class="modal-checkout">
+                                <label for="checkin_time">Checkout</label>
+                                <input type="time" name="checkout_time" id="checkout_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+                            </div>
 
                         @if (@$data['reason'][0] == 'L')
                         <div class="form-group w-50 mx-auto mb-3">
@@ -75,44 +75,11 @@
                             </button>
                         </div>
                         <input type="hidden" id="form_url" value="{{ @$data['url'] }}">
-                    </div>
+                        <input type="hidden" id="form_modal_url" value="{{ @$data['modal_url'] }}">
+                    </div>  
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script src="{{ global_asset('backend/js/fs_d_ecma/components/__regularization.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dateInput = document.getElementById('date');
-        const errorMessage = document.getElementById('date-error');
-
-        function setDateConstraints() {
-            const now = new Date();
-            const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
-
-            const formatDate = (date) => date.toISOString().split('T')[0];
-
-            dateInput.max = formatDate(now);
-            dateInput.min = formatDate(twoDaysAgo);
-        }
-
-        function validateDate() {
-            console.log('coming to validate');
-            const selectedDate = new Date(dateInput.value);
-            const now = new Date();
-            const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
-
-            if (selectedDate < twoDaysAgo || selectedDate > now) {
-                errorMessage.classList.remove('hidden');
-                dateInput.setCustomValidity('Invalid date');
-            } else {
-                errorMessage.classList.add('hidden');
-                dateInput.setCustomValidity('');
-            }
-        }
-
-        setDateConstraints();
-        // dateInput.addEventListener('input', validateDate);
-    });
-</script>

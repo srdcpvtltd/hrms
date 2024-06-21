@@ -30,10 +30,10 @@ class RegularizationControler extends Controller
     }
     public function dashboardAjaxRegularizationModal(Request $request)
     {
-
         try {
             $data['title']    = _trans('common.Check In');
             $data['url']      = route('admin.ajaxRegularization');
+            $data['modal_url']      = route('admin.ajaxDashboardRegularizationModal');
             $data['button']   = _trans('common.Check In');
             $data['type']     = 'checkin';
             $data['reason']   = $this->attendance_repo->checkInStatus(auth()->user()->id, date('H:i'));
