@@ -98,7 +98,10 @@ class AttendanceController extends Controller
         $result = $regularization_data->save();
 
         if ($result) {
-           Attendance::create([
+
+            $attendance_data = Attendance::where('user_id', $regularization_data->user_id)->where('date', $regularization_data->date)->first();
+
+            $data = [
                 'user_id' => $regularization_data->user_id,
                 'company_id' => $regularization_data->company_id,
                 'date' => $regularization_data->date,
@@ -123,7 +126,17 @@ class AttendanceController extends Controller
                 // 'country_code' => $regularization_data->country_code,
                 // 'country' => $regularization_data->country,
                 // 'status_id' => $regularization_data->status_id
-            ]);
+            ];
+            if ($attendance_data) {
+                Log::info($attendance_data);
+                Log::info("update");
+
+                $attendance_data->update($data);
+            } else {
+                Log::info($attendance_data);
+                Log::info("create");
+                $attendance_data->create($data);
+            }
         }
 
 

@@ -110,20 +110,20 @@ class AttendanceRegularizationRepository{
                 $request['checkin_ip'] = getUserIpAddr();
                 $attendance_status = $this->attendance_repo->checkInStatus($user->id, $request->check_in);
                 Log::info($attendance_status);
-                if (count($attendance_status) > 0) {
+                // if (count($attendance_status) > 0) {
 
-                    if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
-                        $validator = Validator::make($request->all(), [
-                            'reason' => 'required',
-                        ]); 
+                //     if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
+                //         $validator = Validator::make($request->all(), [
+                //             'reason' => 'required',
+                //         ]); 
 
-                        if ($validator->fails()) {
-                            $data = [
-                                'reason_status' => 'L'
-                            ];
-                            return $this->responseWithError(__('Reason is required'), $data, 400);
-                        }
-                    }
+                //         if ($validator->fails()) {
+                //             $data = [
+                //                 'reason_status' => 'L'
+                //             ];
+                //             return $this->responseWithError(__('Reason is required'), $data, 400);
+                //         }
+                //     }
                     
                     $current_date_time = date('Y-m-d H:i:s');
                     $checkinTime = $this->getDateTime($request->checkIn);
@@ -173,9 +173,9 @@ class AttendanceRegularizationRepository{
                     }
 
                     return $this->responseWithSuccess('Check in Regularization Successfull', $regularization, 200);
-                } else {
-                    return $this->responseWithError('No Schedule found', [], 400);
-                }
+                // } else {
+                //     return $this->responseWithError('No Schedule found', [], 400);
+                // }
             } else {
                 return $this->responseWithError('You your ip address is not valid', [], 400);
             }

@@ -40,18 +40,19 @@
                                     <div class="clock company_name_clock fs-16 clock">{{ _trans('attendance.00:00:00') }}</div>
                             </div>
                         </div> -->
-                            <div class="modal-date">
+                        <div class="form-group">
                                 <input type="date" name="date" onchange="checkAttendance()" id="date" class="form-control" required>
                                 <!-- <small onchange="validateDate()" id="date-error" class="hint-msg">Please select a date within the last 48 hours.</small> -->
                             </div>
-                                <label for="checkin_time">Checkin</label>
+                            <div class="form-group">
+                            <label for="checkin_time">Checkin</label>
                                 <input type="time" name="checkin_time" id="checkin_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
                             </div>
-                            <div class="modal-checkout">
-                                <label for="checkin_time">Checkout</label>
+                            <div class="form-group">
+                            <label for="checkin_time">Checkout</label>
                                 <input type="time" name="checkout_time" id="checkout_time" class="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
                             </div>
-                            <div class="modal-chec
+                            
 
                         @if (@$data['reason'][0] == 'L')
                         <div class="form-group w-50 mx-auto mb-3">

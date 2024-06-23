@@ -173,7 +173,7 @@ var modalClose = (event) => {
 
 viewModal = (ur) => {
   modalClose();
-  $.post(ur, function (data) {
+  $.get(ur, function (data) {
     if (data == "fail") {
       setTimeout(function () {
         toastr.error("Something went wrong!", "Error!", {

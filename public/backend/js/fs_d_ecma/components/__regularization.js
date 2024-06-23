@@ -1,4 +1,4 @@
-const { error } = require("jquery");
+// const { error } = require("jquery");
 
 var url = $('#url').val();
 var _token = $('meta[name="csrf-token"]').attr('content');
@@ -25,19 +25,39 @@ function checkAttendance() {
         return response.json();
     }).then(responseData => {
         console.log(responseData);
-        if(responseData?.check_in != null){
+        if(responseData?.check_in != null && responseData?.check_out != null ){
+            
             let checkin_time = responseData.check_in;
+            let checkout_time = responseData.check_out;
 
             // Extract the time part in HH:MM format
-            let timeOnly = checkin_time.substring(11, 16);
-            
+            let checkin_timeOnly = checkin_time.substring(11, 16);
+            let checkout_timeOnly = checkout_time.substring(11, 16);
+
             // Set the value to the time input field
-            document.getElementById('checkin_time').value = timeOnly;
-        }else{
+            document.getElementById('checkin_time').value = checkin_timeOnly;
+            document.getElementById('checkout_time').value = checkout_timeOnly;
+
+
+        }else if(responseData?.check_in != null && responseData?.check_out == null){
+            let checkin_time = responseData.check_in;
+            let checkin_timeOnly = checkin_time.substring(11, 16);
+
+            document.getElementById('checkin_time').value = checkin_timeOnly;
+            Toast.fire({
+                icon: 'warning',
+                title: responseData?.message ?? 'Something went wrong.',
+                timer: 3000, // Extend time limit to 5 seconds
+                
+            });
+        }
+        else{
             Toast.fire({
                 icon: 'error',
                 title: responseData?.message ?? 'Something went wrong.',
+                timer: 3000, // Extend time limit to 5 seconds
             })
+
         }
     });
 }
@@ -78,6 +98,7 @@ btnHold();
 var checkUrl;
 var checkIn = (url) => {
     checkUrl = url;
+    console.log(checkUrl);
 
     if (navigator?.geolocation) {
         navigator.geolocation.getCurrentPosition(attendanceStore, positionError, { timeout: 10000 });
@@ -114,6 +135,7 @@ function attendanceStore(position = null) {
     $.ajax({
         type: 'GET',
         url: checkUrl,
+        
         data: {
             latitude: position?.coords?.latitude ?? '23.7909811',
             longitude: position?.coords?.longitude ?? '90.4067015',
@@ -136,7 +158,7 @@ function attendanceStore(position = null) {
             } else {
                 Toast.fire({
                     icon: 'error',
-                    title: response?.data?.message ?? 'Something went wrong!',
+                    title: data?.responseJSON?.message ?? 'Something went wrong!',
                 })
             }
         },

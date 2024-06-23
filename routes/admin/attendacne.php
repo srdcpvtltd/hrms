@@ -16,7 +16,7 @@ Route::group(['middleware' => ['xss','auth', 'TimeZone', 'MaintenanceMode'], 'pr
     //checkin regularization
     Route::post('check-attendance',  [RegularizationControler::class, 'checkAttendance'])->name('admin.checkAttendance');
 
-    Route::post('ajax-regularization-modal',  [RegularizationControler::class, 'dashboardAjaxRegularizationModal'])->name('admin.ajaxDashboardRegularizationModal');
+    Route::get('ajax-regularization-modal',  [RegularizationControler::class, 'dashboardAjaxRegularizationModal'])->name('admin.ajaxDashboardRegularizationModal');
     Route::get('ajax-regularization', [RegularizationControler::class, 'dashboardAjaxRegularization'])->name('admin.ajaxRegularization');
       // take break ajax
       Route::get('ajax-break-modal',  [CheckInController::class, 'dashboardAjaxBreakModal'])->name('admin.ajaxDashboardBreakModal');

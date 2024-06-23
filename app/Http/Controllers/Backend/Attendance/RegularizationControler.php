@@ -36,22 +36,26 @@ class RegularizationControler extends Controller
         $user_id = auth()->user()->id;
 
         $attendance_data = Attendance::where('user_id', $user_id)->where('date', $date)->first();
+
         if ($attendance_data && $attendance_data->check_in != null  && $attendance_data->check_out != null) {
             Log::info($attendance_data);
             return response()->json([
-                'message' => "Already Checkedin"
+                'check_in' => $attendance_data ? $attendance_data->check_in : null,
+                'check_out' => $attendance_data ? $attendance_data->check_out : null
             ]);
-        } elseif ($attendance_data && $attendance_data->check_in != null && $attendance_data == null) {
+        } elseif ($attendance_data && $attendance_data->check_in != null && $attendance_data->check_out == null) {
             Log::info($attendance_data ? $attendance_data->check_in : null);
 
             return response()->json([
-                'check_in' => $attendance_data ? $attendance_data->check_in : null
+                'check_in' => $attendance_data ? $attendance_data->check_in : null,
+                'message' => "Enter Checkout",
             ]);
         } else {
             Log::info($attendance_data);
 
             return response()->json([
-                'check_in' => null
+                'check_in' => null,
+                'message' => "You were absent",
             ]);
         }
     }
