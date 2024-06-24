@@ -100,7 +100,7 @@ class AttendanceController extends Controller
         if ($result) {
 
             $attendance_data = Attendance::where('user_id', $regularization_data->user_id)->where('date', $regularization_data->date)->first();
-
+            Log::info($attendance_data);
             $data = [
                 'user_id' => $regularization_data->user_id,
                 'company_id' => $regularization_data->company_id,
@@ -133,9 +133,9 @@ class AttendanceController extends Controller
 
                 $attendance_data->update($data);
             } else {
-                Log::info($attendance_data);
+                Log::info($data);
                 Log::info("create");
-                $attendance_data->create($data);
+                Attendance::create($data);
             }
         }
 
