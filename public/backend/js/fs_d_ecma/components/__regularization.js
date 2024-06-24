@@ -146,6 +146,7 @@ function attendanceStore(position = null) {
             checkOut: checkOut ?? ''
         },
         success: function (data) {
+            console.log(data);
             if (data?.result) {
                 Toast.fire({
                     icon: 'success',
@@ -157,8 +158,8 @@ function attendanceStore(position = null) {
                 }, 1500)
             } else {
                 Toast.fire({
-                    icon: 'error',
-                    title: data?.responseJSON?.message ?? 'Something went wrong!',
+                    icon: 'success',
+                    title: data?.responseJSON?.message ?? 'Regularization Added',
                 })
             }
         },

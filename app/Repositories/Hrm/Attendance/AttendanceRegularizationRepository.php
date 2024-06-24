@@ -93,15 +93,13 @@ class AttendanceRegularizationRepository{
         Log::info('jyoti-regularization repository->attendanceRegularization');
                     // Log::info($user);
         if($user){
-            Log::info($user);
             $attendance = $this->attendance->where(['user_id' => $user->id, 'date' => $request->date])->first();
             $check_regularization = $this->regularization->where(['user_id' => $user->id, 'date' => $request->date])->first();;
-            if ($check_regularization && $attendance && !settings('multi_checkin')) {
-                Log::info("multi_checkin");
-                return $this->responseWithError('Attendance already exists', [], 400);
-            }
+            // if ($check_regularization && $attendance && !settings('multi_checkin')) {
+            //     Log::info("multi_checkin");
+            //     return $this->responseWithError('Attendance already exists', [], 400);
+            // }
             if (settings('location_check') && !$this->attendance_repo->locationCheck($request)) {
-                Log::info("location_check");
                 return $this->responseWithError('Your location is not valid', [], 400);
             }
             $isIpRestricted = $this->attendance_repo->isIpRestricted();  
@@ -109,7 +107,6 @@ class AttendanceRegularizationRepository{
             if ($isIpRestricted) {
                 $request['checkin_ip'] = getUserIpAddr();
                 $attendance_status = $this->attendance_repo->checkInStatus($user->id, $request->check_in);
-                Log::info($attendance_status);
                 // if (count($attendance_status) > 0) {
 
                 //     if ($attendance_status[0] == AttendanceStatus::LATE && $request['check_in_location'] != 'Device') {
@@ -126,9 +123,11 @@ class AttendanceRegularizationRepository{
                 //     }
                     
                     $current_date_time = date('Y-m-d H:i:s');
-                    $checkinTime = $this->getDateTime($request->checkIn);
-                    $checkoutTime = $this->getDateTime($request->checkOut);
-
+                    $checkinTime = $this->getDateTime($request->date,$request->checkIn);
+                    $checkoutTime = $this->getDateTime($request->date,$request->checkOut);
+                    Log::info("cheking time");
+                    Log::info($checkinTime);
+                    Log::info($checkoutTime);
                     $regularization = new $this->regularization;
                     // dd($check_in);
                     $regularization->user_id = $user->id;
@@ -140,16 +139,8 @@ class AttendanceRegularizationRepository{
                         $filePath = $this->uploadImage($request->face_image, 'uploads/attendance/');
                         $regularization->face_image = $filePath ? $filePath->id : null;
                     }
-
-                    if ($request->attendance_from == 'web') {
-                        $regularization->check_in = $checkinTime;
-                        $regularization->check_out = $checkoutTime;
-
-                    } else {
-                        $regularization->check_in = $current_date_time;
-                        $regularization->check_out = $checkoutTime;
-                    }
-
+                    $regularization->check_in = $checkinTime;
+                    $regularization->check_out = $checkoutTime;
                     $regularization->in_status = $attendance_status[0];
                     $regularization->checkin_ip = $request->checkin_ip;
                     $regularization->late_time = $attendance_status[1];

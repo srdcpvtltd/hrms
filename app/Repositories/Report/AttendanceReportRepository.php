@@ -1767,6 +1767,7 @@ class AttendanceReportRepository
                 'data' => $data->map(function ($data) {
                     $action_button = '';
                     if (hasPermission('attendance_update')) {
+                        Log::info($data->id);
                         $action_button .= actionButton(_trans('common.Edit'), route('attendance.checkInEdit', $data->id), 'profile');
                     }
                     $button = ' <div class="dropdown dropdown-action">

@@ -35,14 +35,23 @@ trait GeoLocationTrait
         return $time;
     }
 
-    public function getDateTime($time)
+    public function getDateTime($date,$time)
     {
-        // $userCountry = auth()->user()->company->country;
-        // date_default_timezone_set($userCountry->time_zone);
-        $date = \request()->get('date') . ' ' . $time . ':00';
-        $datetime = new \DateTime($date);
-        $la_time = new DateTimeZone(@auth()->user()->time_zone??'Asia/Dhaka');
-        $datetime->setTimezone($la_time);
+        // // $userCountry = auth()->user()->company->country;
+        // // date_default_timezone_set($userCountry->time_zone);
+        // $date = \request()->get('date') . ' ' . $time . ':00';
+        // $datetime = new \DateTime($date);
+        // $la_time = new DateTimeZone(@auth()->user()->time_zone??'Asia/Dhaka');
+        // $datetime->setTimezone($la_time);
+        // return $datetime->format('Y-m-d H:i:s');
+
+        $dateTimeString = $date . ' ' . $time . ':00';
+
+        // Create DateTime object
+        $datetime = new \DateTime($dateTimeString);
+    
+        // Return the formatted datetime
         return $datetime->format('Y-m-d H:i:s');
+    
     }
 }
