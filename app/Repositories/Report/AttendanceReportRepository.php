@@ -1825,7 +1825,12 @@ class AttendanceReportRepository
             }
 
             $regularization = $this->regularization->query();
-            $regularization = $regularization->where('approve_status',0)->where('company_id', auth()->user()->company_id);
+
+            if(auth()->user()->role->slug == "manager"){
+                $regularization = $regularization->where('manager_id',auth()->user()->id)->where('approve_status',0)->where('company_id', auth()->user()->company_id);
+            }else{
+                $regularization = $regularization->where('approve_status',0)->where('company_id', auth()->user()->company_id);
+            }
 
             if (auth()->user()->role->slug == 'staff') {
                 $regularization = $regularization->where('user_id', auth()->id());

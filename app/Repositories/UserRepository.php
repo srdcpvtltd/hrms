@@ -128,9 +128,7 @@ class UserRepository
             } catch (\Throwable $th) {
                 //throw $th;
             }
-
-
-
+            
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Employee successfully Created.'), $user);
         } catch (\Throwable $th) {

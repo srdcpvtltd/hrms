@@ -91,7 +91,7 @@ class AttendanceRegularizationRepository{
     public function attendanceRegularization($user, $request){
         Log::info($request);
         Log::info('jyoti-regularization repository->attendanceRegularization');
-                    // Log::info($user);
+                    Log::info($user);
         if($user){
             $attendance = $this->attendance->where(['user_id' => $user->id, 'date' => $request->date])->first();
             $check_regularization = $this->regularization->where(['user_id' => $user->id, 'date' => $request->date])->first();;
@@ -123,14 +123,12 @@ class AttendanceRegularizationRepository{
                 //     }
                     
                     $current_date_time = date('Y-m-d H:i:s');
-                    $checkinTime = $this->getDateTime($request->date,$request->checkIn);
-                    $checkoutTime = $this->getDateTime($request->date,$request->checkOut);
-                    Log::info("cheking time");
-                    Log::info($checkinTime);
-                    Log::info($checkoutTime);
+                    $checkinTime = $this->getRegularizationDateTime($request->date,$request->checkIn);
+                    $checkoutTime = $this->getRegularizationDateTime($request->date,$request->checkOut);
                     $regularization = new $this->regularization;
                     // dd($check_in);
                     $regularization->user_id = $user->id;
+                    $regularization->manager_id = $user->manager_id;
                     $regularization->company_id = $user->company->id;
                     $regularization->remote_mode_in = $request->remote_mode_in;
                     $regularization->date = $request->date;   

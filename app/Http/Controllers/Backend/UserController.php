@@ -519,8 +519,7 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-
-
+        Log::info($request->all());
         try {
             $result = $this->user->save($request);
             if ($result->original['result']) {
