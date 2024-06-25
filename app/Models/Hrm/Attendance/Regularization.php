@@ -46,6 +46,7 @@ class Regularization extends Model
         'id',
         'company_id',
         'user_id',
+        'manager_id',
         'date',
         'remote_mode_in',
         'remote_mode_out',

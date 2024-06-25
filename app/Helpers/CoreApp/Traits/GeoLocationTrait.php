@@ -34,8 +34,17 @@ trait GeoLocationTrait
         $time = $date->createFromFormat('Y-m-d H:i:s', date('Y-m-d') . ' ' . $time . ':00');
         return $time;
     }
-
-    public function getDateTime($date,$time)
+        public function getDateTime($time)
+        {
+            // $userCountry = auth()->user()->company->country;
+            // date_default_timezone_set($userCountry->time_zone);
+            $date = \request()->get('date') . ' ' . $time . ':00';
+            $datetime = new \DateTime($date);
+            $la_time = new DateTimeZone(@auth()->user()->time_zone??'Asia/Dhaka');
+            $datetime->setTimezone($la_time);
+            return $datetime->format('Y-m-d H:i:s');
+        }
+    public function getRegularizationDateTime($date,$time)
     {
         // // $userCountry = auth()->user()->company->country;
         // // date_default_timezone_set($userCountry->time_zone);
@@ -54,4 +63,5 @@ trait GeoLocationTrait
         return $datetime->format('Y-m-d H:i:s');
     
     }
+
 }
