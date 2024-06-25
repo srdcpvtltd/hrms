@@ -265,7 +265,7 @@
                                     <li class="nav-item {{ menu_active_by_route('regularization.index') }}">
                                         <a href="{{ route('regularization.index') }}"
                                             class=" {{ set_active(route('regularization.index')) }}">
-                                            <span>{{ _trans('attendance.Regularization') }}</span>
+                                            <span>{{ _trans('attendance.Approve Regularization') }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -682,20 +682,27 @@
                             </ul>
                         </li>
                     @endif
-                    @if (hasPermission('user_menu') != true && !hasFeature('employees') != true)
-                    <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
+                    <!-- @if (hasPermission('user_menu') != true && !hasFeature('employees') != true) -->
+                    <!-- <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
+                        <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardRegularizationModal') }}`)"
+                            class="parent-item-content {{ menu_active_by_route(['attendance.index']) }}">
+                            <i class="las la-calendar-check"></i>
+                            <span class="on-half-expanded">{{ _trans('common.Regularization') }}</span>
+                        </a>
+                    </li> -->
+                    <!-- @endif -->
+
+                    @include('backend.partials.configurations-sidebar')
+
+                    @include('backend.partials.settings-sidebar')
+                @endif
+                <li class="sidebar-menu-item {{ menu_active_by_route(['attendance.index', 'attendance.create', 'attendance.edit']) }}">
                         <a id="demo" onclick="viewModal(`{{ route('admin.ajaxDashboardRegularizationModal') }}`)"
                             class="parent-item-content {{ menu_active_by_route(['attendance.index']) }}">
                             <i class="las la-calendar-check"></i>
                             <span class="on-half-expanded">{{ _trans('common.Regularization') }}</span>
                         </a>
                     </li>
-                    @endif
-
-                    @include('backend.partials.configurations-sidebar')
-
-                    @include('backend.partials.settings-sidebar')
-                @endif
             </ul>
             <!-- parent menu list end  -->
         </div>
