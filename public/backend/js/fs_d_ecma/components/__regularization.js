@@ -26,20 +26,34 @@ function checkAttendance() {
     }).then(responseData => {
         console.log(responseData);
         if(responseData?.check_in != null && responseData?.check_out != null ){
+            console.log("already Checkin");
+            // let checkin_time = responseData.check_in;
+            // let checkout_time = responseData.check_out;
+
+            // // Extract the time part in HH:MM format
+            // let checkin_timeOnly = checkin_time.substring(11, 16);
+            // let checkout_timeOnly = checkout_time.substring(11, 16);
+
+            // // Set the value to the time input field
+            // document.getElementById('checkin_time').value = checkin_timeOnly;
+            // document.getElementById('checkout_time').value = checkout_timeOnly;
+            $checkin_input=document.getElementById('checkin_time');
+            $checkout_input=document.getElementById('checkout_time');
+            $reason=document.getElementById('reason');
+            $('.progress').hide();
             
-            let checkin_time = responseData.check_in;
-            let checkout_time = responseData.check_out;
-
-            // Extract the time part in HH:MM format
-            let checkin_timeOnly = checkin_time.substring(11, 16);
-            let checkout_timeOnly = checkout_time.substring(11, 16);
-
-            // Set the value to the time input field
-            document.getElementById('checkin_time').value = checkin_timeOnly;
-            document.getElementById('checkout_time').value = checkout_timeOnly;
-
-
+            
+            $checkin_input.disabled  = true;
+            $checkout_input.disabled  = true;
+            $reason.disabled =  true;
+            
+            Toast.fire({
+                icon: 'info',
+                title: responseData?.message ?? "Something went Wrong"
+            })
         }else if(responseData?.check_in != null && responseData?.check_out == null){
+            console.log("Checkout null");
+
             let checkin_time = responseData.check_in;
             let checkin_timeOnly = checkin_time.substring(11, 16);
 
@@ -50,8 +64,29 @@ function checkAttendance() {
                 timer: 3000, // Extend time limit to 5 seconds
                 
             });
+            // checkAttendance()
+            $checkin_input=document.getElementById('checkin_time');
+            $checkout_input=document.getElementById('checkout_time');
+            $reason=document.getElementById('reason');
+            // $('.progress').hide();
+
+
+            $checkin_input.disabled  = false;
+            $checkout_input.disabled  = false;
         }
         else{
+            console.log("else part");
+            $checkin_input=document.getElementById('checkin_time');
+            $checkout_input=document.getElementById('checkout_time');
+            $reason=document.getElementById('reason');
+            $('.progress').show();
+            
+
+
+            $checkin_input.disabled  = false;
+            $checkout_input.disabled  = false;
+            $reason.disabled =  false;
+
             Toast.fire({
                 icon: 'error',
                 title: responseData?.message ?? 'Something went wrong.',

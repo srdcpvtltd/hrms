@@ -128,13 +128,8 @@ class AttendanceController extends Controller
                 // 'status_id' => $regularization_data->status_id
             ];
             if ($attendance_data) {
-                Log::info($attendance_data);
-                Log::info("update");
-
                 $attendance_data->update($data);
             } else {
-                Log::info($data);
-                Log::info("create");
                 Attendance::create($data);
             }
         }
