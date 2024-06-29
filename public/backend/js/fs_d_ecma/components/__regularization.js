@@ -26,17 +26,6 @@ function checkAttendance() {
     }).then(responseData => {
         console.log(responseData);
         if(responseData?.check_in != null && responseData?.check_out != null ){
-            console.log("already Checkin");
-            // let checkin_time = responseData.check_in;
-            // let checkout_time = responseData.check_out;
-
-            // // Extract the time part in HH:MM format
-            // let checkin_timeOnly = checkin_time.substring(11, 16);
-            // let checkout_timeOnly = checkout_time.substring(11, 16);
-
-            // // Set the value to the time input field
-            // document.getElementById('checkin_time').value = checkin_timeOnly;
-            // document.getElementById('checkout_time').value = checkout_timeOnly;
             $checkin_input=document.getElementById('checkin_time');
             $checkout_input=document.getElementById('checkout_time');
             $reason=document.getElementById('reason');
@@ -52,7 +41,6 @@ function checkAttendance() {
                 title: responseData?.message ?? "Something went Wrong"
             })
         }else if(responseData?.check_in != null && responseData?.check_out == null){
-            console.log("Checkout null");
 
             let checkin_time = responseData.check_in;
             let checkin_timeOnly = checkin_time.substring(11, 16);
@@ -75,7 +63,6 @@ function checkAttendance() {
             $checkout_input.disabled  = false;
         }
         else{
-            console.log("else part");
             $checkin_input=document.getElementById('checkin_time');
             $checkout_input=document.getElementById('checkout_time');
             $reason=document.getElementById('reason');
