@@ -22,6 +22,7 @@ use App\Helpers\CoreApp\Traits\ApiReturnFormatTrait;
 use App\Models\coreApp\Relationship\RelationshipTrait;
 use App\Models\Hrm\Attendance\Regularization;
 use App\Repositories\Hrm\Attendance\AttendanceRepository;
+use Carbon\CarbonPeriod;
 
 class AttendanceReportRepository
 {
@@ -1720,12 +1721,17 @@ class AttendanceReportRepository
     function table($request)
     {
         try {
+            // $total_weekends=0;
             if ($request->from && $request->to) {
                 $start_date = $request->from;
                 $end_date = $request->to;
+                
+                
+
             } else {
                 $start_date = date('Y-m-01');
                 $end_date = date('Y-m-t');
+                
             }
             $attendance = $this->attendance->query();
             $attendance = $attendance->where('company_id', auth()->user()->company_id);
@@ -1762,9 +1768,10 @@ class AttendanceReportRepository
                 // });
             }
 
+            $weekends=4;
             $data = $attendance->paginate($request->limit ?? 2);
             return [
-                'data' => $data->map(function ($data) {
+                'data' => $data->map(function ($data) use($weekends)  {
                     $action_button = '';
                     if (hasPermission('attendance_update')) {
                         Log::info($data->id);
@@ -1796,6 +1803,7 @@ class AttendanceReportRepository
                         'overtime'     => $this->overTimeCount($data) ?? '',
                         'date'       =>  $data->date,
                         'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                        'total_weekends' => $weekends,
                         'action'      => $button,
                     ];
                 }),
@@ -1826,10 +1834,10 @@ class AttendanceReportRepository
 
             $regularization = $this->regularization->query();
 
-            if(auth()->user()->role->slug == "manager"){
-                $regularization = $regularization->where('manager_id',auth()->user()->id)->where('approve_status',0)->where('company_id', auth()->user()->company_id);
-            }else{
-                $regularization = $regularization->where('approve_status',0)->where('company_id', auth()->user()->company_id);
+            if (auth()->user()->role->slug == "manager") {
+                $regularization = $regularization->where('manager_id', auth()->user()->id)->where('approve_status', 0)->where('company_id', auth()->user()->company_id);
+            } else {
+                $regularization = $regularization->where('approve_status', 0)->where('company_id', auth()->user()->company_id);
             }
 
             if (auth()->user()->role->slug == 'staff') {
@@ -1873,7 +1881,6 @@ class AttendanceReportRepository
                         $action_button .= actionButton(_trans('common.Approve'), route('approve.attendance.regularization', $data->id), 'profile');
                         // $action_button .= actionButton(_trans('common.Edit'), route('attendance.checkInEdit', $data->id), 'profile');
                         $action_button .= actionButton(_trans('common.Reject'), route('reject.attendance.regularization', $data->id), 'profile');
-
                     }
                     // $button = ' <div class="dropdown dropdown-action">
                     //                    <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
