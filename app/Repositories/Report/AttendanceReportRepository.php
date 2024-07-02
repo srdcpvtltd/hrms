@@ -1718,20 +1718,100 @@ class AttendanceReportRepository
             }
         }
     }
+
     function table($request)
     {
         try {
+            $sundayCount = 0;
+            $totalHoliday = 0;
             // $total_weekends=0;
             if ($request->from && $request->to) {
                 $start_date = $request->from;
                 $end_date = $request->to;
-                
-                
+
+                $first_date = date('d/m/Y', strtotime($request->from));
+                $last_date = date('d/m/Y', strtotime($request->to));
+                Log::info($first_date);
+                Log::info($last_date);
+
+                $startDate = Carbon::createFromFormat('d/m/Y', $first_date);
+                $endDate = Carbon::createFromFormat('d/m/Y', $last_date);
+
+                Log::info($startDate);
+                Log::info($endDate);
+
+                $period = CarbonPeriod::create($startDate, $endDate);
+                Log::info($period);
+                $allDates = [];
+                // Loop through each date in the period
+                foreach ($period as $date) {
+                    $allDates[] = $date->format('Y-m-d');
+
+                    // Check if the day is Sunday (0)
+                    if ($date->isSunday()) {
+                        $sundayCount++;
+                    }
+                }
+
+                foreach ($allDates as $singleDate) {
+                    $holiday = Holiday::where('company_id', auth()->user()->company_id)
+                        ->where('start_date', '<=', $singleDate)
+                        ->where('end_date', '>=', $singleDate)
+                        ->first();
+        
+                    if ($holiday) {
+                        $totalHoliday++;
+                    }
+                }
+
+                Log::info($sundayCount);
+                Log::info($totalHoliday);
+
 
             } else {
                 $start_date = date('Y-m-01');
                 $end_date = date('Y-m-t');
-                
+
+                $first_date = date('01/m/Y');
+                $last_date = date('d/m/Y');
+
+                // $start_date = date('d/m/Y', strtotime($request->from));
+                // $end_date = date('d/m/Y', strtotime($request->to));
+                Log::info($first_date);
+                Log::info($last_date);
+
+                $startDate = Carbon::createFromFormat('d/m/Y', $first_date);
+                $endDate = Carbon::createFromFormat('d/m/Y', $last_date);
+
+                Log::info($startDate);
+                Log::info($endDate);
+
+                $period = CarbonPeriod::create($startDate, $endDate);
+                Log::info($period);
+
+                $allDates = [];
+                // Loop through each date in the period
+                foreach ($period as $date) {
+                    $allDates[] = $date->format('Y-m-d');
+
+                    // Check if the day is Sunday (0)
+                    if ($date->isSunday()) {
+                        $sundayCount++;
+                    }
+                }
+
+                foreach ($allDates as $singleDate) {
+                    $holiday = Holiday::where('company_id', auth()->user()->company_id)
+                        ->where('start_date', '<=', $singleDate)
+                        ->where('end_date', '>=', $singleDate)
+                        ->first();
+        
+                    if ($holiday) {
+                        $totalHoliday++;
+                    }
+                }
+                Log::info($sundayCount);
+                Log::info($totalHoliday);
             }
             $attendance = $this->attendance->query();
             $attendance = $attendance->where('company_id', auth()->user()->company_id);
@@ -1768,10 +1848,9 @@ class AttendanceReportRepository
                 // });
             }
 
-            $weekends=4;
             $data = $attendance->paginate($request->limit ?? 2);
             return [
-                'data' => $data->map(function ($data) use($weekends)  {
+                'data' => $data->map(function ($data) use ($sundayCount) {
                     $action_button = '';
                     if (hasPermission('attendance_update')) {
                         Log::info($data->id);
@@ -1803,7 +1882,8 @@ class AttendanceReportRepository
                         'overtime'     => $this->overTimeCount($data) ?? '',
                         'date'       =>  $data->date,
                         'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                        'total_weekends' => $weekends,
+                        'total_weekends' => $sundayCount,
+                        'total_holidays' => 0,
                         'action'      => $button,
                     ];
                 }),

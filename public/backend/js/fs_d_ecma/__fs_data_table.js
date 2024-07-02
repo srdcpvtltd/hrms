@@ -478,6 +478,7 @@ function attendanceDatatable(...values) {
     "checkoutLocation",
     "hours",
     "total_weekends",
+    "total_holidays",
     "action",
   ];
   // console.log(data);
