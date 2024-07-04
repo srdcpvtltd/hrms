@@ -94,8 +94,8 @@ $(document).ready(function () {
             let totalHolidayCell = attendanceRow.insertCell();
            
             for (let j = 1; j < rows.length; j++) {
-                totalWeekOffCell.innerHTML = rows[j].cells[13].innerHTML.trim();
-                totalHolidayCell.innerHTML = rows[j].cells[14].innerHTML.trim();
+                totalWeekOffCell.innerHTML = rows[j].cells[14].innerHTML.trim();
+                totalHolidayCell.innerHTML = rows[j].cells[15].innerHTML.trim();
             }
 
         });

@@ -1882,9 +1882,9 @@ class AttendanceReportRepository
                         'overtime'     => $this->overTimeCount($data) ?? '',
                         'date'       =>  $data->date,
                         'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                        'action'      => $button,
                         'total_weekends' => $sundayCount,
                         'total_holidays' => 0,
-                        'action'      => $button,
                     ];
                 }),
                 'pagination' => [

@@ -889,10 +889,10 @@ class AttendanceRepository
             _trans('common.Check Out'),
             _trans('common.Checkout Location'),
             _trans('common.Hours'),
+            _trans('common.Action'),
             _trans('common.Total Weekoff'),
-            _trans('common.Total Holidays'),
+            _trans('common.Total Holidays')
             // _trans('common.Overtime'),
-            _trans('common.Action')
 
         ];
     }

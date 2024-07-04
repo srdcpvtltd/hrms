@@ -1,9 +1,9 @@
 
-var page   = 1;
+var page = 1;
 var table_data;
 var __url = $('meta[name="base-url"]').attr("content");
 
-function loader(){
+function loader() {
     let loader = `<tbody>
                     <tr class="odd">
                         <td valign="top" colspan="${table_data['column'].length + 1}" class="dataTables_empty">
@@ -28,8 +28,8 @@ function loader(){
                 </tbody>`;
     $("." + table_data['table_id']).find('thead').after(loader);
 }
-function emptyTable(){
-    let html =`<tbody>
+function emptyTable() {
+    let html = `<tbody>
                 <tr class="odd">
                     <td valign="top" colspan="${table_data['column'].length + 1}" class="dataTables_empty">
                         <div class="no-data-found-wrapper text-center ">
@@ -45,19 +45,19 @@ function emptyTable(){
 
 
 function table(table_info, page = 1) {
-console.log(table_info);
+    console.log(table_info);
     table_data = table_info;
     console.log(table_info['url'] + '?page=' + page ?? 1);
     $.ajax({
         url: table_info['url'] + '?page=' + page ?? 1,
         type: "GET",
         data: table_info['value'],
-        beforeSend: function(){
-            loader();        
+        beforeSend: function () {
+            loader();
         },
         success: function (response) {
-        // console.log(response);
-            if(response?.data?.length > 0){
+            // console.log(response);
+            if (response?.data?.length > 0) {
                 let html = '';
                 html += '<tbody class="tbody">';
                 for (let i = 0; i < response.data.length; i++) {
@@ -72,11 +72,16 @@ console.log(table_info);
                             </td>`;
                     }
                     for (let j = 0; j < table_info['column'].length; j++) {
-                    if (table_info['column'][j] == 'id') {                            
-                        html += '<td>' + (i + (table_info['value']['limit'] * (page-1)) + 1) + '</td>';
-                    } else {                            
-                        html += '<td>' + response.data[i][table_info['column'][j]] + '</td>';
-                    }
+                        if (table_info['column'][j] == 'id') {
+                            html += '<td>' + (i + (table_info['value']['limit'] * (page - 1)) + 1) + '</td>';
+                        } else {
+                            // Add style attribute to the last two columns
+                            let style = '';
+                            if (j >= table_info['column'].length - 2) {
+                                style = 'style="display: none;"';
+                            }
+                            html += `<td ${style}>` + response.data[i][table_info['column'][j]] + '</td>';
+                        }
                     }
                     html += '</tr>';
                 }
@@ -86,13 +91,27 @@ console.log(table_info);
                 $('.ot-pagination').remove();
                 $('.table-responsive').after(response?.pagination?.pagination_html)
                 // response?.pagination?.total_pages - response?.pagination?.current_page > 0 ?  page ++ : page = 1;
-            }else{
-                emptyTable();                 
+
+                // Add inline CSS to hide columns and headers
+                const style = `
+            <style>
+                .${table_info['table_id']} th:nth-last-child(1), 
+                .${table_info['table_id']} th:nth-last-child(2),
+                .${table_info['table_id']} td:nth-last-child(1), 
+                .${table_info['table_id']} td:nth-last-child(2) {
+                    display: none;
+                }
+            </style>
+        `;
+                $("head").append(style);
+            } else {
+
+                emptyTable();
             }
         },
         error: function (error) {
-            emptyTable();      
-            if (error.responseJSON.message) {                    
+            emptyTable();
+            if (error.responseJSON.message) {
                 Swal.fire({
                     title: error.responseJSON.message,
                     type: 'error',
@@ -104,7 +123,7 @@ console.log(table_info);
     });
 }
 
-function pagination(page_no){
-page = page_no ?? 1;
-table(table_data, page);
+function pagination(page_no) {
+    page = page_no ?? 1;
+    table(table_data, page);
 }
